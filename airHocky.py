@@ -12,9 +12,14 @@ class AHwindow(arcade.Window):
         self.board_sprite = arcade.Sprite('board.png')
         self.board_sprite.set_position(width // 2, height // 2)
 
+        self.puck_sprite = arcade.Sprite('puck.png')
+        self.puck_sprite.set_position (width // 2, height // 2)
+
     def on_draw(self):
         arcade.start_render()
+
         self.board_sprite.draw()
+        self.puck_sprite.draw()
 
 def main():
     window = AHwindow(SCREEN_WIDTH, SCREEN_HEIGHT)
