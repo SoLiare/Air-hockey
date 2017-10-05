@@ -29,15 +29,15 @@ class Player1:
         self.key = key
 
     def update(self, delta):
-        if self.key=='w':
-            self.y+=5
-        elif self.key=='s':
-            self.y-=5
-        elif self.key=='a':
-            self.x-=5
-        elif self.key=='d':
-            self.x+=5
-        self.key = '0'
+        if self.key!=0:
+            if self.key=='w' and self.y < 533+83.5-50:
+                self.y+=5
+            elif self.key=='s' and self.y > 83.5+50:
+                self.y-=5
+            elif self.key=='a' and self.x > 50:
+                self.x-=5
+            elif self.key=='d' and self.x < self.world.width//2-50:
+                self.x+=5
 
 
 class Player2:
@@ -51,16 +51,15 @@ class Player2:
         self.key = key
 
     def update(self, delta):
-        if self.key=='up':
-            self.y+=5
-        elif self.key=='down':
-            self.y-=5
-        elif self.key=='left':
-            self.x-=5
-        elif self.key=='right':
-            self.x+=5
-        self.key = '0'
-    
+        if self.key!=0:
+            if self.key=='up' and self.y < 533+83.5-50:
+                self.y+=5
+            elif self.key=='down' and self.y > 83.5+50:
+                self.y-=5
+            elif self.key=='left' and self.x > self.world.width//2+50:
+                self.x-=5
+            elif self.key=='right' and self.x < self.world.width-50:
+                self.x+=5
 
 class World:
     def __init__(self, width, height):
@@ -94,4 +93,9 @@ class World:
             self.player2.direction('left')
         elif key==arcade.key.RIGHT:
             self.player2.direction('right')
-            
+
+    def on_key_release(self, key, key_modifiers):
+        if key==arcade.key.W or key==arcade.key.S or key==arcade.key.A or key==arcade.key.D:
+            self.player1.direction('0')
+        elif key==arcade.key.UP or key==arcade.key.DOWN or key==arcade.key.RIGHT or key==arcade.key.LEFT:
+            self.player2.direction('0')
