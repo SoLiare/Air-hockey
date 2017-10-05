@@ -1,5 +1,4 @@
 import arcade
-import arcade.key
 
 from models import World
 
@@ -40,6 +39,9 @@ class AHwindow(arcade.Window):
 
         self.player2 = ModelSprite('player2.png', model=self.world.player2)
         self.player2.set_position(width-100, height // 2)
+
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
  
     def on_draw(self):
         arcade.start_render()
