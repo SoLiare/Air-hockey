@@ -43,11 +43,14 @@ class AHwindow(arcade.Window):
  
     def on_draw(self):
         arcade.start_render()
-
         self.board.draw()
         self.puck.draw()
         self.player1.draw()
         self.player2.draw()
+    
+    def update(self, delta):
+        self.world.update(delta)
+        
 
 def main():
     window = AHwindow(SCREEN_WIDTH, SCREEN_HEIGHT)
