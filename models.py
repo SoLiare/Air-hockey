@@ -2,6 +2,10 @@ import arcade.key
 
 PUCK = 50
 PLAYER = 75
+GOAL_UP = 616.5
+GOAL_DOWN = 83.5
+GOAL_LEFT = 0
+GOAL_RIGHT = 800
 
 START = 0
 
@@ -52,7 +56,10 @@ class Puck:
         return (abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)
 
     def goal(self):
-        return (self.x-37.5 > 800 or self.x+37.5 < 0) and (self.y-37.5 > 216.75 and self.y+37.5 < 483.25)
+        return (self.x-PUCK//2 <= GOAL_LEFT or self.x+PUCK//2 >= GOAL_RIGHT) and self.y >= GOAL_DOWN and self.y <= GOAL_UP
+
+    def score(self):
+        return self.x+PUCK//2 < GOAL_LEFT or self.x-PUCK//2 > GOAL_RIGHT
 
 
 class Player1:
@@ -60,25 +67,43 @@ class Player1:
         self.world = world
         self.x = x
         self.y = y
-        self.key = '0'
+        self.direction = []
 
     def start_point(self):
         self.x = 100
         self.y = self.world.height//2
 
-    def direction(self, key):
-        self.key = key
+    def add_direction(self, key, key_modifiers):
+        if key==arcade.key.W:
+            self.direction.append('up')
+        if key==arcade.key.S:
+            self.direction.append('down')
+        if key==arcade.key.A:
+            self.direction.append('left')
+        if key==arcade.key.D:
+            self.direction.append('right')
+
+    def remove_direction(self, key, key_modifiers):
+        if key==arcade.key.W:
+            self.direction.remove('up')
+        if key==arcade.key.S:
+            self.direction.remove('down')
+        if key==arcade.key.A:
+            self.direction.remove('left')
+        if key==arcade.key.D:
+            self.direction.remove('right')
 
     def update(self, delta):
-        if self.key!=0:
-            if self.key=='w' and self.y < 533+83.5-PLAYER//2:
-                self.y+=5
-            if self.key=='s' and self.y > 83.5+PLAYER//2:
-                self.y-=5
-            if self.key=='a' and self.x > PLAYER//2:
-                self.x-=5
-            if self.key=='d' and self.x < self.world.width//2-PLAYER//2:
-                self.x+=5
+        for i in range(len(self.direction)):
+            if self.direction[i]!='\n':
+                if self.direction[i]=='up' and self.y < 533+83.5-PLAYER//2:
+                    self.y+=5
+                if self.direction[i]=='down' and self.y > 83.5+PLAYER//2:
+                    self.y-=5
+                if self.direction[i]=='left' and self.x > PLAYER//2:
+                    self.x-=5
+                if self.direction[i]=='right' and self.x < self.world.width//2-PLAYER//2:
+                    self.x+=5
 
 
 class Player2:
@@ -86,25 +111,43 @@ class Player2:
         self.world = world
         self.x = x
         self.y = y
-        self.key = '0'
+        self.direction = []
 
     def start_point(self):
         self.x = self.world.width-100
         self.y = self.world.height//2
 
-    def direction(self, key):
-        self.key = key
+    def add_direction(self, key, key_modifiers):
+        if key==arcade.key.UP:
+            self.direction.append('up')
+        if key==arcade.key.DOWN:
+            self.direction.append('down')
+        if key==arcade.key.LEFT:
+            self.direction.append('left')
+        if key==arcade.key.RIGHT:
+            self.direction.append('right')
+
+    def remove_direction(self, key, key_modifiers):
+        if key==arcade.key.UP:
+            self.direction.remove('up')
+        if key==arcade.key.DOWN:
+            self.direction.remove('down')
+        if key==arcade.key.LEFT:
+            self.direction.remove('left')
+        if key==arcade.key.RIGHT:
+            self.direction.remove('right')
 
     def update(self, delta):
-        if self.key!=0:
-            if self.key=='up' and self.y < 533+83.5-PLAYER//2:
-                self.y+=5
-            if self.key=='down' and self.y > 83.5+PLAYER//2:
-                self.y-=5
-            if self.key=='left' and self.x > self.world.width//2+PLAYER//2:
-                self.x-=5
-            if self.key=='right' and self.x < self.world.width-PLAYER//2:
-                self.x+=5
+        for i in range(len(self.direction)):
+            if self.direction[i]!='\n':
+                if self.direction[i]=='up' and self.y < 533+83.5-PLAYER//2:
+                    self.y+=5
+                if self.direction[i]=='down' and self.y > 83.5+PLAYER//2:
+                    self.y-=5
+                if self.direction[i]=='left' and self.x > self.world.width//2+PLAYER//2:
+                    self.x-=5
+                if self.direction[i]=='right' and self.x < self.world.width-PLAYER//2:
+                    self.x+=5
 
 
 class World:
@@ -128,7 +171,7 @@ class World:
             self.puck.direction(self.player1.x, self.player1.y)
         if self.puck.hit(self.player2, PLAYER//2+PUCK//2):
             self.puck.direction(self.player2.x, self.player2.y)
-        if self.puck.goal():
+        if self.puck.score():
             START = 0
             self.puck.start_point()
             self.player1.start_point()
@@ -137,25 +180,9 @@ class World:
             START+=1
 
     def on_key_press(self, key, key_modifiers):
-        if key==arcade.key.W:
-            self.player1.direction('w')
-        if key==arcade.key.S:
-            self.player1.direction('s')
-        if key==arcade.key.A:
-            self.player1.direction('a')
-        if key==arcade.key.D:
-            self.player1.direction('d')
-        if key==arcade.key.UP:
-            self.player2.direction('up')
-        if key==arcade.key.DOWN:
-            self.player2.direction('down')
-        if key==arcade.key.LEFT:
-            self.player2.direction('left')
-        if key==arcade.key.RIGHT:
-            self.player2.direction('right')
+        self.player1.add_direction(key, key_modifiers)
+        self.player2.add_direction(key, key_modifiers)
 
     def on_key_release(self, key, key_modifiers):
-        if key==arcade.key.W or key==arcade.key.S or key==arcade.key.A or key==arcade.key.D:
-            self.player1.direction('0')
-        if key==arcade.key.UP or key==arcade.key.DOWN or key==arcade.key.RIGHT or key==arcade.key.LEFT:
-            self.player2.direction('0')
+        self.player1.remove_direction(key, key_modifiers)
+        self.player2.remove_direction(key, key_modifiers)
