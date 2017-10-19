@@ -2,8 +2,10 @@ import arcade.key
 
 PUCK = 50
 PLAYER = 75
-GOAL_UP = 616.5
-GOAL_DOWN = 83.5
+UPPER_BORDER = 616.5
+LOWER_BORDER = 83.5
+GOAL_UP = 483.25
+GOAL_DOWN = 216.75
 GOAL_LEFT = 0
 GOAL_RIGHT = 800
 
@@ -44,19 +46,16 @@ class Puck:
                 self.keyY = -5
 
     def update(self, delta):
-        if not self.goal():
-            if self.x+PUCK//2 > self.world.width or self.x-PUCK//2 < 0:
+        if self.x+PUCK//2 >= self.world.width or self.x-PUCK//2 <= 0:
+            if self.y+PUCK//2 <= GOAL_DOWN or self.y-PUCK//2 >= GOAL_UP:
                 self.keyX = self.keyX*-1
-            if self.y-PUCK//2 < 83.5 or self.y+PUCK//2 > 533+83.5:
-                self.keyY = self.keyY*-1
+        if self.y-PUCK//2 <= LOWER_BORDER or self.y+PUCK//2 >= UPPER_BORDER:
+            self.keyY = self.keyY*-1
         self.x+=self.keyX
         self.y+=self.keyY
 
     def hit(self, other, hit_size):
         return (abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)
-
-    def goal(self):
-        return (self.x-PUCK//2 <= GOAL_LEFT or self.x+PUCK//2 >= GOAL_RIGHT) and self.y >= GOAL_DOWN and self.y <= GOAL_UP
 
     def score(self):
         return self.x+PUCK//2 < GOAL_LEFT or self.x-PUCK//2 > GOAL_RIGHT
