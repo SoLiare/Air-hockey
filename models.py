@@ -24,21 +24,21 @@ class Puck:
         self.y = y
 
     def start_point(self):
-        self.x = self.world.width//2
-        self.y = self.world.height//2
+        self.x = self.world.width // 2
+        self.y = self.world.height // 2
 
     def direction(self, keyX, keyY):
-        if keyX==0 and keyY==0:
+        if keyX == 0 and keyY == 0:
             self.keyX = 0
             self.keyY = 0
         else:
-            if self.x==keyX:
+            if self.x == keyX:
                 self.keyX = 0
             elif self.x > keyX:
                 self.keyX = 5
             else:
                 self.keyX = -5
-            if self.y==keyY:
+            if self.y == keyY:
                 self.keyY = 0
             elif self.y > keyY:
                 self.keyY = 5
@@ -46,19 +46,19 @@ class Puck:
                 self.keyY = -5
 
     def update(self, delta):
-        if self.x+PUCK//2 >= self.world.width or self.x-PUCK//2 <= 0:
-            if self.y+PUCK//2 <= GOAL_DOWN or self.y-PUCK//2 >= GOAL_UP:
-                self.keyX = self.keyX*-1
-        if self.y-PUCK//2 <= LOWER_BORDER or self.y+PUCK//2 >= UPPER_BORDER:
+        if self.x + PUCK // 2 >= self.world.width or self.x - PUCK // 2 <= 0:
+            if self.y + PUCK // 2 <= GOAL_DOWN or self.y - PUCK // 2 >= GOAL_UP:
+                self.keyX = self.keyX * -1
+        if self.y - PUCK // 2 <= LOWER_BORDER or self.y + PUCK // 2 >= UPPER_BORDER:
             self.keyY = self.keyY*-1
-        self.x+=self.keyX
-        self.y+=self.keyY
+        self.x += self.keyX
+        self.y += self.keyY
 
     def hit(self, other, hit_size):
-        return (abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)
+        return (abs(self.x - other.x) <= hit_size) and (abs(self.y - other.y) <= hit_size)
 
     def score(self):
-        return self.x+PUCK//2 < GOAL_LEFT or self.x-PUCK//2 > GOAL_RIGHT
+        return self.x + PUCK // 2 < GOAL_LEFT or self.x - PUCK // 2 > GOAL_RIGHT
 
 
 class Player1:
@@ -70,39 +70,39 @@ class Player1:
 
     def start_point(self):
         self.x = 100
-        self.y = self.world.height//2
+        self.y = self.world.height // 2
 
     def add_direction(self, key, key_modifiers):
-        if key==arcade.key.W:
+        if key == arcade.key.W:
             self.direction.append('up')
-        if key==arcade.key.S:
+        if key == arcade.key.S:
             self.direction.append('down')
-        if key==arcade.key.A:
+        if key == arcade.key.A:
             self.direction.append('left')
-        if key==arcade.key.D:
+        if key == arcade.key.D:
             self.direction.append('right')
 
     def remove_direction(self, key, key_modifiers):
-        if key==arcade.key.W:
+        if key == arcade.key.W:
             self.direction.remove('up')
-        if key==arcade.key.S:
+        if key == arcade.key.S:
             self.direction.remove('down')
-        if key==arcade.key.A:
+        if key == arcade.key.A:
             self.direction.remove('left')
-        if key==arcade.key.D:
+        if key == arcade.key.D:
             self.direction.remove('right')
 
     def update(self, delta):
         for i in range(len(self.direction)):
-            if self.direction[i]!='\n':
-                if self.direction[i]=='up' and self.y < 533+83.5-PLAYER//2:
-                    self.y+=5
-                if self.direction[i]=='down' and self.y > 83.5+PLAYER//2:
-                    self.y-=5
-                if self.direction[i]=='left' and self.x > PLAYER//2:
-                    self.x-=5
-                if self.direction[i]=='right' and self.x < self.world.width//2-PLAYER//2:
-                    self.x+=5
+            if self.direction[i] != '\n':
+                if self.direction[i] == 'up' and self.y < 533 + 83.5 - PLAYER // 2:
+                    self.y += 5
+                if self.direction[i] == 'down' and self.y > 83.5 + PLAYER // 2:
+                    self.y -= 5
+                if self.direction[i] == 'left' and self.x > PLAYER // 2:
+                    self.x -= 5
+                if self.direction[i] == 'right' and self.x < self.world.width // 2 - PLAYER // 2:
+                    self.x += 5
 
 
 class Player2:
@@ -113,39 +113,39 @@ class Player2:
         self.direction = []
 
     def start_point(self):
-        self.x = self.world.width-100
-        self.y = self.world.height//2
+        self.x = self.world.width - 100
+        self.y = self.world.height // 2
 
     def add_direction(self, key, key_modifiers):
-        if key==arcade.key.UP:
+        if key == arcade.key.UP:
             self.direction.append('up')
-        if key==arcade.key.DOWN:
+        if key == arcade.key.DOWN:
             self.direction.append('down')
-        if key==arcade.key.LEFT:
+        if key == arcade.key.LEFT:
             self.direction.append('left')
-        if key==arcade.key.RIGHT:
+        if key == arcade.key.RIGHT:
             self.direction.append('right')
 
     def remove_direction(self, key, key_modifiers):
-        if key==arcade.key.UP:
+        if key == arcade.key.UP:
             self.direction.remove('up')
-        if key==arcade.key.DOWN:
+        if key == arcade.key.DOWN:
             self.direction.remove('down')
-        if key==arcade.key.LEFT:
+        if key == arcade.key.LEFT:
             self.direction.remove('left')
-        if key==arcade.key.RIGHT:
+        if key == arcade.key.RIGHT:
             self.direction.remove('right')
 
     def update(self, delta):
         for i in range(len(self.direction)):
             if self.direction[i]!='\n':
-                if self.direction[i]=='up' and self.y < 533+83.5-PLAYER//2:
+                if self.direction[i] == 'up' and self.y < 533 + 83.5 - PLAYER //2:
                     self.y+=5
-                if self.direction[i]=='down' and self.y > 83.5+PLAYER//2:
+                if self.direction[i] == 'down' and self.y > 83.5 + PLAYER // 2:
                     self.y-=5
-                if self.direction[i]=='left' and self.x > self.world.width//2+PLAYER//2:
+                if self.direction[i] == 'left' and self.x > self.world.width // 2 + PLAYER // 2:
                     self.x-=5
-                if self.direction[i]=='right' and self.x < self.world.width-PLAYER//2:
+                if self.direction[i] == 'right' and self.x < self.world.width - PLAYER // 2:
                     self.x+=5
 
 
@@ -161,6 +161,7 @@ class World:
 
         self.end = False
         self.start = True
+
         self.player1_score = 0
         self.player2_score = 0
         self.scoreboard = arcade.create_text("{} : {}".format(self.player1_score, self.player2_score), arcade.color.WHITE, 50, align = "center", anchor_x = "center", anchor_y = "center")
@@ -195,9 +196,20 @@ class World:
                 self.start = False
 
     def on_key_press(self, key, key_modifiers):
+        if key == arcade.key.ENTER and self.end == True:
+            self.new_game()
         self.player1.add_direction(key, key_modifiers)
         self.player2.add_direction(key, key_modifiers)
 
     def on_key_release(self, key, key_modifiers):
         self.player1.remove_direction(key, key_modifiers)
         self.player2.remove_direction(key, key_modifiers)
+
+    def new_game(self):
+        self.end = False
+        self.start = True
+
+        self.player1_score = 0
+        self.player2_score = 0
+
+        self.scoreboard = arcade.create_text("{} : {}".format(self.player1_score, self.player2_score), arcade.color.WHITE, 50, align = "center", anchor_x = "center", anchor_y = "center")

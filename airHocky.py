@@ -60,6 +60,8 @@ class AHwindow(arcade.Window):
                 arcade.render_text(arcade.create_text("PLAYER 1 WIN!!!!!", arcade.color.RED, 50, align="center", anchor_x="center", anchor_y="center"), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
             else:
                 arcade.render_text(arcade.create_text("PLAYER 2 WIN!!!!!", arcade.color.BLUE, 50, align="center", anchor_x="center", anchor_y="center"), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+
+            arcade.render_text(arcade.create_text("Press \"Enter\" to restart.", arcade.color.CAMOUFLAGE_GREEN, 15, align="center", anchor_x="center", anchor_y="center"), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
     
     def update(self, delta):
         self.world.update(delta)
