@@ -22,6 +22,7 @@ class Puck:
         self.world = world
         self.x = x
         self.y = y
+        self.speed = 5
 
     def start_point(self):
         self.x = self.world.width // 2
@@ -31,26 +32,37 @@ class Puck:
         if keyX == 0 and keyY == 0:
             self.keyX = 0
             self.keyY = 0
-        else:
+        elif self.x == keyX or self.y == keyY:
             if self.x == keyX:
                 self.keyX = 0
-            elif self.x > keyX:
-                self.keyX = 5
+                if self.y > keyY:
+                    self.keyY = (2 * (self.speed ** 2)) ** (1/2)
+                else:
+                    self.keyY = (2 * (self.speed ** 2)) ** (1/2) * -1
             else:
-                self.keyX = -5
-            if self.y == keyY:
                 self.keyY = 0
-            elif self.y > keyY:
-                self.keyY = 5
+                if self.x > keyX:
+                    self.keyX = (2 * (self.speed ** 2)) ** (1/2)
+                else:
+                    self.keyX = (2 * (self.speed ** 2)) ** (1/2) * -1
+        else:
+            if self.x > keyX:
+                self.keyX = self.speed
             else:
-                self.keyY = -5
+                self.keyX = self.speed * -1
+            if self.y > keyY:
+                self.keyY = self.speed
+            else:
+                self.keyY = self.speed * -1
 
     def update(self, delta):
         if self.x + PUCK // 2 >= self.world.width or self.x - PUCK // 2 <= 0:
             if self.y + PUCK // 2 <= GOAL_DOWN or self.y - PUCK // 2 >= GOAL_UP:
+                self.speed += 0.1
                 self.keyX = self.keyX * -1
         if self.y - PUCK // 2 <= LOWER_BORDER or self.y + PUCK // 2 >= UPPER_BORDER:
-            self.keyY = self.keyY*-1
+            self.speed += 0.1
+            self.keyY = self.keyY * -1
         self.x += self.keyX
         self.y += self.keyY
 
@@ -66,6 +78,7 @@ class Player1:
         self.world = world
         self.x = x
         self.y = y
+        self.speed = 5
         self.direction = []
 
     def start_point(self):
@@ -96,13 +109,13 @@ class Player1:
         for i in range(len(self.direction)):
             if self.direction[i] != '\n':
                 if self.direction[i] == 'up' and self.y < 533 + 83.5 - PLAYER // 2:
-                    self.y += 5
+                    self.y += self.speed
                 if self.direction[i] == 'down' and self.y > 83.5 + PLAYER // 2:
-                    self.y -= 5
+                    self.y -= self.speed
                 if self.direction[i] == 'left' and self.x > PLAYER // 2:
-                    self.x -= 5
+                    self.x -= self.speed
                 if self.direction[i] == 'right' and self.x < self.world.width // 2 - PLAYER // 2:
-                    self.x += 5
+                    self.x += self.speed
 
 
 class Player2:
@@ -110,6 +123,7 @@ class Player2:
         self.world = world
         self.x = x
         self.y = y
+        self.speed = 5
         self.direction = []
 
     def start_point(self):
@@ -140,13 +154,13 @@ class Player2:
         for i in range(len(self.direction)):
             if self.direction[i]!='\n':
                 if self.direction[i] == 'up' and self.y < 533 + 83.5 - PLAYER //2:
-                    self.y+=5
+                    self.y += self.speed
                 if self.direction[i] == 'down' and self.y > 83.5 + PLAYER // 2:
-                    self.y-=5
+                    self.y -= self.speed
                 if self.direction[i] == 'left' and self.x > self.world.width // 2 + PLAYER // 2:
-                    self.x-=5
+                    self.x -= self.speed
                 if self.direction[i] == 'right' and self.x < self.world.width - PLAYER // 2:
-                    self.x+=5
+                    self.x += self.speed
 
 
 class World:
@@ -169,15 +183,22 @@ class World:
     def update(self, delta):
         if self.end == False:
             if self.start == True:
+                self.player1.speed = 5
+                self.player2.speed = 5
+                self.puck.speed = 5
                 self.puck.direction(0,0)
             self.player1.update(delta)
             self.player2.update(delta)
             self.puck.update(delta)
         
-            if self.puck.hit(self.player1, PLAYER//2+PUCK//2):
+            if self.puck.hit(self.player1, PLAYER // 2 + PUCK // 2):
+                self.puck.speed += 0.1
+                self.player1.speed += 0.07
                 self.puck.direction(self.player1.x, self.player1.y)
             
-            if self.puck.hit(self.player2, PLAYER//2+PUCK//2):
+            if self.puck.hit(self.player2, PLAYER // 2 + PUCK // 2):
+                self.puck.speed += 0.1
+                self.player2.speed += 0.07
                 self.puck.direction(self.player2.x, self.player2.y)
             
             if self.puck.score():
