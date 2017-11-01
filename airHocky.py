@@ -53,7 +53,13 @@ class AHwindow(arcade.Window):
         self.player1.draw()
         self.player2.draw()
 
-        arcade.render_text(arcade.create_text(str(self.world.player1_score)+" : "+str(self.world.player2_score), arcade.color.WHITE, 20), 380, 50)
+        arcade.render_text(self.world.scoreboard, SCREEN_WIDTH // 2, 83.5 // 2)
+
+        if self.world.end == True:
+            if self.world.player1_score > self.world.player2_score:
+                arcade.render_text(arcade.create_text("PLAYER 1 WIN!!!!!", arcade.color.RED, 50, align="center", anchor_x="center", anchor_y="center"), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+            else:
+                arcade.render_text(arcade.create_text("PLAYER 2 WIN!!!!!", arcade.color.BLUE, 50, align="center", anchor_x="center", anchor_y="center"), SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     
     def update(self, delta):
         self.world.update(delta)

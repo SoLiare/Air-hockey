@@ -9,10 +9,7 @@ GOAL_DOWN = 216.75
 GOAL_LEFT = 0
 GOAL_RIGHT = 800
 
-START = 0
 MATCH_POINT = 5
-PLAYER1_SCORE = 0
-PLAYER2_SCORE = 0
 
 class Board:
     def __init__(self, x, y):
@@ -162,32 +159,40 @@ class World:
         self.player1 = Player1(self, 100, height // 2)
         self.player2 = Player2(self, width-100, height // 2)
 
+        self.end = False
+        self.start = True
+        self.player1_score = 0
+        self.player2_score = 0
+        self.scoreboard = arcade.create_text("{} : {}".format(self.player1_score, self.player2_score), arcade.color.WHITE, 50, align = "center", anchor_x = "center", anchor_y = "center")
+
     def update(self, delta):
-        global START, PLAYER1_SCORE, PLAYER2_SCORE
+        if self.end == False:
+            if self.start == True:
+                self.puck.direction(0,0)
+            self.player1.update(delta)
+            self.player2.update(delta)
+            self.puck.update(delta)
         
-        if START==0:
-            self.puck.direction(0,0)
-        self.player1.update(delta)
-        self.player2.update(delta)
-        self.puck.update(delta)
-        
-        if self.puck.hit(self.player1, PLAYER//2+PUCK//2):
-            self.puck.direction(self.player1.x, self.player1.y)
+            if self.puck.hit(self.player1, PLAYER//2+PUCK//2):
+                self.puck.direction(self.player1.x, self.player1.y)
             
-        if self.puck.hit(self.player2, PLAYER//2+PUCK//2):
-            self.puck.direction(self.player2.x, self.player2.y)
+            if self.puck.hit(self.player2, PLAYER//2+PUCK//2):
+                self.puck.direction(self.player2.x, self.player2.y)
             
-        if self.puck.score():
-            START = 0
-            if self.puck.x>GOAL_RIGHT:
-                PLAYER1_SCORE += 1
-            elif self.puck.x<GOAL_LEFT:
-                PLAYER2_SCORE += 1
-            self.puck.start_point()
-            self.player1.start_point()
-            self.player2.start_point()
-        else:
-            START+=1
+            if self.puck.score():
+                self.start = True
+                if self.puck.x>GOAL_RIGHT:
+                    self.player1_score += 1
+                elif self.puck.x<GOAL_LEFT:
+                    self.player2_score += 1
+                self.scoreboard = arcade.create_text("{} : {}".format(self.player1_score, self.player2_score), arcade.color.WHITE, 50, align="center", anchor_x="center", anchor_y="center")
+                if self.player1_score == MATCH_POINT or self.player2_score == MATCH_POINT:
+                    self.end = True
+                self.puck.start_point()
+                self.player1.start_point()
+                self.player2.start_point()
+            else:
+                self.start = False
 
     def on_key_press(self, key, key_modifiers):
         self.player1.add_direction(key, key_modifiers)
