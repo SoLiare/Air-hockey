@@ -10,6 +10,9 @@ GOAL_LEFT = 0
 GOAL_RIGHT = 800
 
 START = 0
+MATCH_POINT = 5
+PLAYER1_SCORE = 0
+PLAYER2_SCORE = 0
 
 class Board:
     def __init__(self, x, y):
@@ -160,18 +163,26 @@ class World:
         self.player2 = Player2(self, width-100, height // 2)
 
     def update(self, delta):
-        global START
+        global START, PLAYER1_SCORE, PLAYER2_SCORE
+        
         if START==0:
             self.puck.direction(0,0)
         self.player1.update(delta)
         self.player2.update(delta)
         self.puck.update(delta)
+        
         if self.puck.hit(self.player1, PLAYER//2+PUCK//2):
             self.puck.direction(self.player1.x, self.player1.y)
+            
         if self.puck.hit(self.player2, PLAYER//2+PUCK//2):
             self.puck.direction(self.player2.x, self.player2.y)
+            
         if self.puck.score():
             START = 0
+            if self.puck.x>GOAL_RIGHT:
+                PLAYER1_SCORE += 1
+            elif self.puck.x<GOAL_LEFT:
+                PLAYER2_SCORE += 1
             self.puck.start_point()
             self.player1.start_point()
             self.player2.start_point()

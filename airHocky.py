@@ -52,6 +52,8 @@ class AHwindow(arcade.Window):
         self.puck.draw()
         self.player1.draw()
         self.player2.draw()
+
+        arcade.render_text(arcade.create_text(str(self.world.player1_score)+" : "+str(self.world.player2_score), arcade.color.WHITE, 20), 380, 50)
     
     def update(self, delta):
         self.world.update(delta)
